@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  email         String    @unique
+  emailVerified DateTime?
+  image         String
+  account       Account[]
+  projetcs      Project[]
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Project {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  name          String         @unique
+  userId        String         @db.ObjectId
+  User          User?          @relation(fields: [userId], references: [id])
+  description   String
+  slug          String         @unique
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  projectBoards ProjectBoard[]
+}
+
+model ProjectBoard {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  projectId String    @db.ObjectId
+  Project   Project   @relation(fields: [projectId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  status    String    @unique
+  order     Int
+  slug      String    @unique
+  feature   Feature[]
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model Feature {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  slug           String       @unique
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  ProjectBoard   ProjectBoard @relation(fields: [projectBoardId], references: [id])
+  projectBoardId String       @db.ObjectId
+  name           String
+  description    String
+  priority       Priority     @default(LOW)
+  finishDate     DateTime
+  order          Int
+}

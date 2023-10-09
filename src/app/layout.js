@@ -1,5 +1,6 @@
 import AuthProvider from './components/AuthProvider/page'
 import Navbar from './components/Navbar/page'
+import Toast from './components/Toast/page'
 import './globals.css'
 import { Poppins } from 'next/font/google'
 
@@ -19,6 +20,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={poppins.className}>
         <AuthProvider>
+          <Toast />
           <Navbar />
           <div className='w-full px-[20px] md:px-[50px] py-4 md:py-8'>
             {children}

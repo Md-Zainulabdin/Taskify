@@ -35,3 +35,7 @@ body {
     rgba(13, 17, 23, 0)
   );
 }
+
+input[type="search"]::-webkit-search-cancel-button {
+  cursor: pointer;
+}

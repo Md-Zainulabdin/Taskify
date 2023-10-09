@@ -17,7 +17,9 @@ const Login = () => {
     <div className="w-full border flex justify-center items-center py-12">
       <div className="p-4 flex flex-col gap-6 justify-center items-center">
         <div className="heading">
-          <h1 className="text-2xl md:text-3xl font-semibold">Login</h1>
+          <h1 className="text-2xl md:text-3xl font-bold">
+            Login to <span className="text-gradient_blue-purple">Taskify</span>
+          </h1>
         </div>
 
         <div className="auth-options cursor-pointer">

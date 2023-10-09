@@ -7,9 +7,9 @@ import React, { useState } from "react";
 const Navbar = () => {
   const { data: session } = useSession();
   const [show, setShow] = useState(false);
-  console.log(session);
+  // console.log(session);
   return (
-    <div className="w-full h-[70px] transtion border-b flex items-center justify-between px-[20px] md:px-[50px]">
+    <div className="w-full h-[70px] bg-white transtion border-b flex items-center justify-between px-[20px] md:px-[50px]">
       <div className="logo">
         <h1 className="text-2xl font-bold">
           <Link href={"/"}>taskify</Link>
@@ -18,7 +18,7 @@ const Navbar = () => {
 
       <div className="menu relative">
         {session && show && (
-          <div className="drop-down absolute bottom-[-290%] right-0 flex flex-col gap-3 w-[200px] transtion overflow-hidden p-4 rounded-md bg-white shadow-md">
+          <div className="drop-down absolute bottom-[-290%] right-0 z-50 flex flex-col gap-3 w-[200px] transtion overflow-hidden p-4 rounded-md bg-white shadow-md">
             <div className="name">
               <h2 className="font-medium ">
                 {session?.user?.name?.length > 8

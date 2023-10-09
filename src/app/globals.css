@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   color: #222;
 }
@@ -19,4 +23,15 @@ body {
 
 .gradient-bg {
   background-image: linear-gradient(243deg, #4ca5ff, #b573f8);
+}
+
+.light_line {
+  width: 100%;
+  height: 1px;
+  background-image: linear-gradient(
+    90deg,
+    rgba(161, 161, 161, 0),
+    #dadbdd 50%,
+    rgba(13, 17, 23, 0)
+  );
 }

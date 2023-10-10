@@ -14,7 +14,7 @@ const Hero = () => {
         </div>
 
         <div className="desc w-full flex items-center justify-center text-center mx-auto">
-          <p className="text-lg md:text-xl text-[#999] bg-[#fafafa] p-4 rounded-md">
+          <p className="text-lg md:text-xl text-[#999] bg-[#fafafa] font-normal p-4 rounded-md">
             Taskify is a versatile task management tool designed to help
             individuals and teams streamline their work
           </p>

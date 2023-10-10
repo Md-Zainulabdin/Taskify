@@ -1,39 +1,86 @@
-"use client";
-import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { GrFormClose } from "react-icons/gr";
 import slugify from "slugify";
+import axios from "axios";
 
-const CreateProjectForm = ({ isVisible, toggleProjectForm, setShowForm }) => {
+const ProjectForm = ({
+  isVisible,
+  setShowForm,
+  isUpdated,
+  setIsUpdated,
+  updatedProjectId,
+}) => {
+  // State variables to manage form inputs and submission status
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
   const [isCreated, setIsCreated] = useState(false);
 
-  const onSubmitHandler = async (e) => {
-    e.preventDefault();
-
-    setIsCreated(true);
-    const slug = slugify(name);
-
-    if (!name || !desc) return;
-
+  const createProjectHandler = async (slug) => {
     try {
+      // Make a POST request to create a new project
       const { statusText } = await axios.post("/api/projects", {
         name,
         description: desc,
         slug,
       });
 
+      // Show a success toast message
       toast.success(statusText);
     } catch (error) {
       console.log(error);
-      //   toast.error(error?.response?.data);
+      // Handle any errors here and optionally show an error toast message
+      toast.error(error?.response?.data);
     } finally {
+      // Reset form fields and state variables
       setName("");
       setDesc("");
       setShowForm(false);
       setIsCreated(false);
+    }
+  };
+
+  const updateProjectHandler = async (slug) => {
+    try {
+      const { statusText } = await axios.patch("/api/projects", {
+        name,
+        description: desc,
+        slug,
+        id: updatedProjectId,
+      });
+
+      // Show a success toast message
+      toast.success(statusText);
+    } catch (error) {
+      console.log(error);
+      // Handle any errors here and optionally show an error toast message
+      toast.error(error?.response?.data);
+    } finally {
+      // Reset form fields and state variables
+      setName("");
+      setDesc("");
+      setShowForm(false);
+      setIsCreated(false);
+      setIsUpdated(false);
+    }
+  };
+
+  // Function to handle form submission
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+
+    // Set isCreated to true to show a loading message
+    setIsCreated(true);
+
+    // Generate a slug from the project name
+    const slug = slugify(name);
+
+    if (!name || !desc) return;
+
+    if (isUpdated) {
+      updateProjectHandler(slug);
+    } else {
+      createProjectHandler(slug);
     }
   };
 
@@ -55,7 +102,9 @@ const CreateProjectForm = ({ isVisible, toggleProjectForm, setShowForm }) => {
 
       <div className="px-6 py-6 w-full flex flex-col gap-3">
         <div className="title">
-          <h1 className="text-xl font-semibold">Create Project</h1>
+          <h1 className="text-xl font-semibold">
+            {isUpdated ? "Update" : "Create"} Project
+          </h1>
         </div>
 
         <div className="border-t"></div>
@@ -100,7 +149,13 @@ const CreateProjectForm = ({ isVisible, toggleProjectForm, setShowForm }) => {
               disabled={isCreated}
               className="w-full mt-2 transtion border p-2 rounded text-white bg-[#111] font-medium hover:bg-[#222] disabled:bg-[#333]"
             >
-              {isCreated ? "Creating.." : "Create"}
+              {isUpdated
+                ? isCreated
+                  ? "Updating.."
+                  : "Update"
+                : isCreated
+                ? "Creating.."
+                : "Create"}
             </button>
           </form>
         </div>
@@ -109,4 +164,4 @@ const CreateProjectForm = ({ isVisible, toggleProjectForm, setShowForm }) => {
   );
 };
 
-export default CreateProjectForm;
+export default ProjectForm;

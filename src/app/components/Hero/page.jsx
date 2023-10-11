@@ -21,7 +21,7 @@ const Hero = () => {
         </div>
 
         <div className="get-started w-full flex justify-center items-center">
-          <button className="px-8 py-3 border text-white bg-[#111] rounded-md transtion hover:bg-[#222]">
+          <button className="px-8 py-3 border font-medium text-white bg-[#111] rounded-md transtion hover:bg-[#222]">
             <Link href={"/projectboard"}>Get Started</Link>
           </button>
         </div>

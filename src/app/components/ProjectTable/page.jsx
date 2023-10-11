@@ -1,4 +1,6 @@
+"use client";
 import axios from "axios";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { GrFormEdit } from "react-icons/gr";
@@ -57,8 +59,9 @@ const ProjectTable = ({
         </div>
       ) : (
         filterProject.map((project) => (
-          <div
+          <Link
             key={project.id}
+            href={`/projects/${project.slug}`}
             className="w-[350px] relative px-4 py-3 border flex flex-col gap-2 rounded-md shadow-sm hover:border-[#ccc] hover:shadow-md transition cursor-pointer"
           >
             <div
@@ -79,7 +82,7 @@ const ProjectTable = ({
             <div className="desc">
               <p className="text-[#999]">{project.description}</p>
             </div>
-          </div>
+          </Link>
         ))
       )}
     </div>

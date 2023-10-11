@@ -6,11 +6,11 @@ import React, { useEffect, useState } from "react";
 
 const ProjectPage = ({ params }) => {
   const [project, setProject] = useState(null);
-  const [isVisible, setIsVisible] = useState(true); 
-  
+  const [isVisible, setIsVisible] = useState(false);
+
   const toggleForm = () => {
-    setIsVisible(false)
-  }
+    setIsVisible(!isVisible);
+  };
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -21,12 +21,18 @@ const ProjectPage = ({ params }) => {
     fetchProject();
   }, [params.slug]);
 
-  // console.log("projects", project);
+  console.log("projects", project);
 
   return (
     <div>
       <Modal isVisible={isVisible} />
-      <AddBoardForm isVisible={isVisible} toggleForm={toggleForm} />
+      <AddBoardForm
+        isVisible={isVisible}
+        toggleForm={toggleForm}
+        project={project}
+      />
+
+      <button onClick={toggleForm}>Create</button>
     </div>
   );
 };

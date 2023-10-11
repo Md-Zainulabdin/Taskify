@@ -1,12 +1,37 @@
 "use client";
+import axios from "axios";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { GrFormClose } from "react-icons/gr";
+import slugify from "slugify";
 
-const AddBoardForm = ({ isVisible, toggleForm }) => {
-  const [title, setTitle] = useState("");
+const AddBoardForm = ({ isVisible, toggleForm, project }) => {
+  const [status, setStatus] = useState("");
   const [isCreated, setIsCreated] = useState(false);
 
-  const handleBoardSubmit = () => {};
+  const handleBoardSubmit = async (e) => {
+    e.preventDefault();
+    setIsCreated(true);
+
+    const slug = slugify(status);
+
+    try {
+      const { statusText } = await axios.post("/api/project-board", {
+        status,
+        projectId: project?.id,
+        slug,
+      });
+
+      toast.success(statusText);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data);
+    } finally {
+      setStatus("");
+      setIsCreated(false);
+      toggleForm();
+    }
+  };
 
   return (
     <div
@@ -26,9 +51,7 @@ const AddBoardForm = ({ isVisible, toggleForm }) => {
 
       <div className="px-6 py-6 w-full flex flex-col gap-3">
         <div className="title">
-          <h1 className="text-xl font-semibold">
-            Project
-          </h1>
+          <h1 className="text-xl font-semibold">Add Project Board</h1>
         </div>
 
         <div className="border-t"></div>
@@ -39,16 +62,16 @@ const AddBoardForm = ({ isVisible, toggleForm }) => {
             onSubmit={handleBoardSubmit}
           >
             <div className="flex flex-col gap-1">
-              <label htmlFor="title">
-                Title <span className="text-red-500">*</span>
+              <label htmlFor="status">
+                Board Status <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
-                name="title"
-                placeholder="Enter title"
+                name="status"
+                placeholder="Enter status"
                 required
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
                 className="border rounded-md px-3 py-2"
               />
             </div>

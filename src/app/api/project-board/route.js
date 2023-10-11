@@ -23,7 +23,7 @@ export const POST = async (req, res) => {
             data: {
                 slug,
                 status,
-                project: {
+                Project: {
                     connect: {
                         id: projectId
                     }

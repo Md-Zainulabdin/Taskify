@@ -51,6 +51,8 @@ const ProjectTable = ({
 
   if (projects.length === 0) return <div>Loading...</div>;
 
+  console.log(filterProject);
+
   return (
     <div className="w-full flex flex-wrap justify-center md:justify-start items-center md:items-start gap-6 py-8">
       {filterProject.length === 0 ? (
@@ -62,7 +64,7 @@ const ProjectTable = ({
           <Link
             key={project.id}
             href={`/projects/${project.slug}`}
-            className="w-[350px] relative px-4 py-3 border flex flex-col gap-2 rounded-md shadow-sm hover:border-[#ccc] hover:shadow-md transition cursor-pointer"
+            className="w-full md:w-[350px] relative px-4 py-3 border flex flex-col gap-2 rounded-md shadow-sm hover:border-[#ccc] hover:shadow-md transition cursor-pointer"
           >
             <div
               className="edit absolute top-3 right-3 border-2 p-1 rounded-full transtion hover:border-indigo-400"
@@ -81,6 +83,12 @@ const ProjectTable = ({
 
             <div className="desc">
               <p className="text-[#999]">{project.description}</p>
+            </div>
+
+            <div className="date-time mt-2">
+              <span className="text-sm font-medium text-[#333]">
+                {project.createdAt.slice(0, 10).split("-").reverse().join("-")}
+              </span>
             </div>
           </Link>
         ))

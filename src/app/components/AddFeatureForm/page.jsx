@@ -1,87 +1,38 @@
 "use client";
+import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { GrFormClose } from "react-icons/gr";
-import slugify from "slugify";
-import axios from "axios";
 
-const ProjectForm = ({
-  isVisible,
-  setShowForm,
-  isUpdated,
-  setIsUpdated,
-  updatedProjectId,
-}) => {
-  // State variables to manage form inputs and submission status
+const AddFeatureForm = ({ isVisible, toggleForm, boardId }) => {
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
+  const [finishDate, setFinishDate] = useState("");
   const [isCreated, setIsCreated] = useState(false);
 
-  const createProjectHandler = async (slug) => {
-    try {
-      // Make a POST request to create a new project
-      const { statusText } = await axios.post("/api/projects", {
-        name,
-        description: desc,
-        slug,
-      });
-
-      // Show a success toast message
-      toast.success(statusText);
-    } catch (error) {
-      console.log(error);
-      // Handle any errors here and optionally show an error toast message
-      toast.error(error?.response?.data);
-    } finally {
-      // Reset form fields and state variables
-      setName("");
-      setDesc("");
-      setShowForm(false);
-      setIsCreated(false);
-    }
-  };
-
-  const updateProjectHandler = async (slug) => {
-    try {
-      const { statusText } = await axios.patch("/api/projects", {
-        name,
-        description: desc,
-        slug,
-        id: updatedProjectId,
-      });
-
-      // Show a success toast message
-      toast.success(statusText);
-    } catch (error) {
-      console.log(error);
-      // Handle any errors here and optionally show an error toast message
-      toast.error(error?.response?.data);
-    } finally {
-      // Reset form fields and state variables
-      setName("");
-      setDesc("");
-      setShowForm(false);
-      setIsCreated(false);
-      setIsUpdated(false);
-    }
-  };
-
-  // Function to handle form submission
-  const onSubmitHandler = async (e) => {
+  const AddFeatureHandler = async (e) => {
     e.preventDefault();
-
-    // Set isCreated to true to show a loading message
     setIsCreated(true);
 
-    // Generate a slug from the project name
-    const slug = slugify(name);
+    try {
+      const { statusText } = await axios.post("/api/features", {
+        name,
+        description: desc,
+        finishDate,
+        projectBoardId: boardId,
+      });
 
-    if (!name || !desc) return;
-
-    if (isUpdated) {
-      updateProjectHandler(slug);
-    } else {
-      createProjectHandler(slug);
+      toast.success(statusText);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data);
+    } finally {
+      // Reset form fields and state variables
+      setName("");
+      setDesc("");
+      setFinishDate("");
+      setIsCreated(false);
+      toggleForm();
     }
   };
 
@@ -96,16 +47,14 @@ const ProjectForm = ({
       <button
         type="button"
         className="absolute top-3 right-4"
-        onClick={() => setShowForm(false)}
+        onClick={() => toggleForm()}
       >
         <GrFormClose className="text-2xl" />
       </button>
 
       <div className="px-6 py-6 w-full flex flex-col gap-3">
         <div className="title">
-          <h1 className="text-xl font-semibold">
-            {isUpdated ? "Update" : "Create"} Project
-          </h1>
+          <h1 className="text-xl font-semibold">Add Card</h1>
         </div>
 
         <div className="border-t"></div>
@@ -113,7 +62,7 @@ const ProjectForm = ({
         <div className="w-full">
           <form
             className="w-full flex flex-col gap-3"
-            onSubmit={onSubmitHandler}
+            onSubmit={AddFeatureHandler}
           >
             <div className="flex flex-col gap-1">
               <label htmlFor="name">
@@ -145,18 +94,27 @@ const ProjectForm = ({
               />
             </div>
 
+            <div className="flex flex-col gap-1">
+              <label htmlFor="Finish Date">
+                Finish Date <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="date"
+                name="Finish Date"
+                placeholder="Enter Finish Date"
+                required
+                value={finishDate}
+                onChange={(e) => setFinishDate(e.target.value)}
+                className="border rounded-md px-3 py-2"
+              />
+            </div>
+
             <button
               type="submit"
               disabled={isCreated}
               className="w-full mt-2 transtion border p-2 rounded text-white bg-[#111] font-medium hover:bg-[#222] disabled:bg-[#333]"
             >
-              {isUpdated
-                ? isCreated
-                  ? "Updating.."
-                  : "Update"
-                : isCreated
-                ? "Creating.."
-                : "Create"}
+              {!isCreated ? "Add Card" : "Adding..."}
             </button>
           </form>
         </div>
@@ -165,4 +123,4 @@ const ProjectForm = ({
   );
 };
 
-export default ProjectForm;
+export default AddFeatureForm;

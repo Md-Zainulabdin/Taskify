@@ -9,7 +9,7 @@ const Navbar = () => {
   const [show, setShow] = useState(false);
   // console.log(session);
   return (
-    <div className="w-full h-[70px] bg-white transtion border-b flex items-center justify-between px-[20px] md:px-[50px]">
+    <div className="w-full h-[70px] fixed top-0 left-0 z-[60] bg-white transtion border-b flex items-center justify-between px-[20px] md:px-[50px]">
       <div className="logo">
         <h1 className="text-2xl font-bold">
           <Link href={"/"}>taskify</Link>

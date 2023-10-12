@@ -3,7 +3,7 @@ import React from "react";
 
 const Hero = () => {
   return (
-    <div className="w-[700px] flex justify-center items-center py-8 md:py-16 overflow-hidden relative">
+    <div className="w-[700px] flex justify-center items-center py-12 md:py-16 overflow-hidden relative">
       <div className="parent flex flex-col gap-8">
         <div className="title w-full flex flex-col gap-6 text-center">
           <h1 className="text-5xl md:text-7xl font-bold">Manage Your Task</h1>

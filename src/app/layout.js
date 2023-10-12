@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
         <AuthProvider>
           <Toast />
           <Navbar />
-          <div className='w-full px-[20px] md:px-[50px] py-4 md:py-8'>
+          <div className='w-full px-[20px] md:px-[50px] py-4 md:py-8 mt-[70px]'>
             {children}
           </div>
         </AuthProvider>

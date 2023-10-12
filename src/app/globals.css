@@ -39,3 +39,11 @@ body {
 input[type="search"]::-webkit-search-cancel-button {
   cursor: pointer;
 }
+
+.grid-bg {
+  width: 100%;
+  background-image: url("/grid.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}

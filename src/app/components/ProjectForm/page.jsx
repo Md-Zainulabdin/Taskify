@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { GrFormClose } from "react-icons/gr";
 import slugify from "slugify";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const ProjectForm = ({
   isVisible,
@@ -16,6 +17,7 @@ const ProjectForm = ({
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
   const [isCreated, setIsCreated] = useState(false);
+  const router = useRouter();
 
   const createProjectHandler = async (slug) => {
     try {

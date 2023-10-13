@@ -4,6 +4,8 @@ import Modal from "@/app/components/Modal/page";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import ProjectBoard from "@/app/components/ProjectBoard/page";
+import FeatureCard from "@/app/components/FeatureCard/page";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 const ProjectPage = ({ params }) => {
   const [project, setProject] = useState(null);
@@ -25,6 +27,27 @@ const ProjectPage = ({ params }) => {
 
   // console.log(project);
 
+  const onDragEnd = (result) => {
+    const { source, destination, type } = result;
+
+    if (!destination) return;
+    if (type === "status") {
+      const movedBoard = project.projectBoards[source.index];
+      const updatedProjectBoard = Array.from(project.projectBoards);
+
+      updatedProjectBoard.splice(source.index, 1);
+      updatedProjectBoard.splice(destination.index, 0, movedBoard);
+
+      setProject({
+        ...project,
+        projectBoards: updatedProjectBoard.map((board, index) => ({
+          ...board,
+          order: index + 1,
+        })),
+      });
+    }
+  };
+
   return (
     <div>
       <Modal isVisible={isVisible} />
@@ -41,22 +64,49 @@ const ProjectPage = ({ params }) => {
         <p className="text-lg text-[#999]">{project?.description}</p>
       </div>
 
-      <div className="flex flex-row gap-6">
-        {project?.projectBoards?.map((project) => (
-          <div
-            key={project.id}
-            className="bg-[#f5f5f5] w-[354px] rounded-2xl py-3 px-6"
-          >
-            <ProjectBoard
-              boardHeading={project.status}
-              boardId={project.id}
-              numFeatures={project.feature.length}
-              setSelectedBoardId={setSelectedBoardId}
-              toggleAddFeature={() => {}}
-            />
-          </div>
-        ))}
-      </div>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="board-5" direction="horizontal" type="status">
+          {(provided) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className="flex flex-row gap-6"
+            >
+              {project?.projectBoards
+                ?.sort((a, b) => a.order - b.order)
+                .map((project, idx) => (
+                  <Draggable
+                    index={idx}
+                    draggableId={project.id}
+                    key={project.id}
+                  >
+                    {(provided) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.dragHandleProps}
+                        {...provided.draggableProps}
+                        className="bg-[#f5f5f5] w-[354px] rounded-2xl py-3 px-6"
+                      >
+                        <ProjectBoard
+                          boardHeading={project.status}
+                          boardId={project.id}
+                          numFeatures={project.feature.length}
+                          setSelectedBoardId={setSelectedBoardId}
+                        />
+
+                        <div>
+                          {project.feature.map((elm) => (
+                            <FeatureCard key={elm.id} features={elm} />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
 
       <button onClick={toggleForm}>Create</button>
     </div>

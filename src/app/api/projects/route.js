@@ -1,6 +1,7 @@
 import { authOptions } from "@/utils/auth"
 import prisma from "@/utils/prisma";
 import { getServerSession } from "next-auth"
+import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 export const GET = async (req, res) => {
@@ -37,6 +38,8 @@ export const POST = async (req, res) => {
                 name, description, slug, userId,
             }
         });
+
+        revalidateTag('products')
 
         return NextResponse.json(createProject, {
             status: 201, statusText: "Project Created"

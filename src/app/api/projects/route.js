@@ -72,4 +72,30 @@ export const PATCH = async (req, res) => {
         console.log("error", error);
         return new NextResponse("Failed to update data", { status: 500 })
     }
-}   
+}
+
+export const DELETE = async (req, res) => {
+    const { data  } = await req.json();
+    console.log(data);
+
+    // if (!projectId) {
+    //     return new NextResponse("Server Error", { status: 400 });
+    // }
+
+    // console.log(projectId);
+
+    try {
+        // const deleteProject = await prisma.project.delete({
+        //     where: {
+        //         id: projectId
+        //     }
+        // });
+
+        // return NextResponse.json(deleteProject, {
+        //     status: 200, statusText: "Project Deleted"
+        // })
+    } catch (error) {
+        console.log("error", error);
+        return new NextResponse("Failed to Delete project", { status: 500 })
+    }
+}

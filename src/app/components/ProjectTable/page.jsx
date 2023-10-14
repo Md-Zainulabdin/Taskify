@@ -31,12 +31,12 @@ const ProjectTable = ({
     };
 
     fetchData();
-  }, [isCreated]);
+  }, [isCreated, filterProject]);
 
   useEffect(() => {
     // When the search prop changes, filter the projects
     filterProjects(projects);
-  }, [search, projects]);
+  }, [search, filterProject]);
 
   const filterProjects = (data) => {
     if (!search) {
@@ -50,6 +50,20 @@ const ProjectTable = ({
     setFilterProject(filteredProjects);
   };
 
+  const onDeleteHandler = async (projectId) => {
+    console.log(projectId);
+    try {
+      const { statusText } = await axios.delete("/api/projects", {
+        data: projectId,
+      });
+
+      toast.success(statusText);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data);
+    }
+  };
+
   if (projects.length === 0)
     return (
       <div className="w-full h-[60vh] flex justify-center items-center">
@@ -57,11 +71,9 @@ const ProjectTable = ({
       </div>
     );
 
-  console.log(filterProject);
-
   return (
     <div className="w-full flex flex-wrap justify-center md:justify-start items-center md:items-start gap-6 py-8">
-      {!filterProject ? (
+      {filterProject.length === 0 ? (
         <div className="w-full h-[400px] border border-dashed flex justify-center items-center rounded-md">
           <h1 className="text-2xl text-red-500">Not Found!</h1>
         </div>
@@ -85,7 +97,7 @@ const ProjectTable = ({
             <div className="name">
               <Link
                 href={`/projects/${project.slug}`}
-                className="font-semibold text-xl"
+                className="font-semibold text-xl hover:underline"
               >
                 {project.name}
               </Link>
@@ -100,7 +112,12 @@ const ProjectTable = ({
                 {project.createdAt.slice(0, 10).split("-").reverse().join("-")}
               </span>
 
-              <button className="text-sm bg-red-200 text-red-800 px-[8px] py-[3px] rounded-[4px]">Delete</button>
+              <button
+                onClick={() => onDeleteHandler(project.id)}
+                className="text-sm bg-red-200 text-red-800 px-[8px] py-[3px] rounded-[4px]"
+              >
+                Delete
+              </button>
             </div>
           </div>
         ))

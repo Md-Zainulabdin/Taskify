@@ -5,7 +5,7 @@ import React from "react";
 const Hero = () => {
   return (
     <>
-      <div className="w-[700px] flex justify-center items-center py-8 md:py-16 overflow-hidden relative">
+      <div className="md:w-[700px] flex justify-center items-center py-8 md:py-16 overflow-hidden relative">
         <div className="parent flex flex-col gap-8">
           <div className="title w-full flex flex-col gap-6 text-center">
             <h1 className="text-5xl md:text-7xl font-semibold">
@@ -19,8 +19,8 @@ const Hero = () => {
             </h1>
           </div>
 
-          <div className="desc w-full flex items-center justify-center text-center mx-auto">
-            <p className="text-lg md:text-xl text-[#999] bg-[#fafafa] font-normal p-4 rounded-md">
+          <div className="desc md:w-[80%] flex items-center justify-center text-center mx-auto">
+            <p className="text-lg text-[#999] bg-[#fafafa] font-normal p-4 rounded-md">
               Taskify is a versatile task management tool designed to help
               individuals and teams streamline their work
             </p>

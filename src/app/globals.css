@@ -8,6 +8,7 @@ html {
 
 body {
   color: #222;
+  overflow-x: hidden;
 }
 
 .transtion {

@@ -95,10 +95,12 @@ const ProjectTable = ({
               <p className="text-[#999]">{project.description}</p>
             </div>
 
-            <div className="date-time mt-2">
-              <span className="text-sm font-medium text-[#333]">
+            <div className="date-time flex justify-between items-center mt-3">
+              <span className="text-xs text-purple-800 bg-purple-200 px-[8px] py-[3px] rounded-[4px]">
                 {project.createdAt.slice(0, 10).split("-").reverse().join("-")}
               </span>
+
+              <button className="text-sm bg-red-200 text-red-800 px-[8px] py-[3px] rounded-[4px]">Delete</button>
             </div>
           </div>
         ))

@@ -8,11 +8,11 @@ export default function Home() {
         <img
           src="arrow.svg"
           alt="icon"
-          className="w-[50px] h-[50px] rotate-[220deg]"
+          className="w-[40px] h-[40px] rotate-[220deg]"
         />
       </div>
       {/* Hero Section */}
-      <section className="w-full flex flex-col gap-6 md:gap-12 justify-center items-center">
+      <section className="w-full flex flex-col gap-3 md:gap-12 justify-center items-center">
         <Hero />
       </section>
 

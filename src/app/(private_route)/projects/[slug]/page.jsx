@@ -6,12 +6,17 @@ import React, { useEffect, useState } from "react";
 import ProjectBoard from "@/app/components/ProjectBoard/page";
 import FeatureCard from "@/app/components/FeatureCard/page";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { useRouter } from "next/navigation";
+import { PacmanLoader } from "react-spinners";
 
 const ProjectPage = ({ params }) => {
   const [project, setProject] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
   const [selectedBoardId, setSelectedBoardId] = useState("");
+  const [isCreated, setIsCreated] = useState(false);
+  const [isFeatureAdded, setIsFeatureAdded] = useState(false);
 
+  const { back } = useRouter();
   const toggleForm = () => {
     setIsVisible(!isVisible);
   };
@@ -23,7 +28,7 @@ const ProjectPage = ({ params }) => {
     };
 
     fetchProject();
-  }, [params.slug]);
+  }, [params.slug, isCreated, isFeatureAdded]);
 
   // console.log(project);
 
@@ -48,6 +53,12 @@ const ProjectPage = ({ params }) => {
     }
   };
 
+  if (!project)
+    return (
+      <div className="w-full h-[60vh] flex justify-center items-center">
+        <PacmanLoader color="#333" />
+      </div>
+    );
   return (
     <div>
       <Modal isVisible={isVisible} />
@@ -55,17 +66,41 @@ const ProjectPage = ({ params }) => {
         isVisible={isVisible}
         toggleForm={toggleForm}
         project={project}
+        isCreated={isCreated}
+        setIsCreated={setIsCreated}
       />
 
-      <div className="title my-6 flex flex-col gap-2">
-        <h1 className="text-2xl md:text-3xl font-semibold text-[#222]">
-          {project?.name}
-        </h1>
-        <p className="text-lg text-[#999]">{project?.description}</p>
+      <div className="navigation w-full pb-4 flex gap-2 items-center">
+        <span className="text-[#333] cursor-pointer hover:text-[#555]">
+          ● Home {">"}
+        </span>
+        <span
+          onClick={() => back()}
+          className="text-[#333] cursor-pointer hover:text-[#555]"
+        >
+          Project Board {">"}
+        </span>
+        <span className="font-semibold">{project?.name}</span>
+      </div>
+
+      <div className="flex items-center justify-between">
+        <div className="title my-6 flex flex-col gap-2">
+          <h1 className="text-2xl md:text-3xl font-semibold text-[#222]">
+            {project?.name}
+          </h1>
+          <p className="text-lg text-[#999]">{project?.description}</p>
+        </div>
+
+        <button
+          onClick={toggleForm}
+          className="text-lg border px-6 py-3 rounded-md border-dashed"
+        >
+          Add Board
+        </button>
       </div>
 
       <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="board-5" direction="horizontal" type="status">
+        <Droppable droppableId="board-6" direction="horizontal" type="status">
           {(provided) => (
             <div
               {...provided.droppableProps}
@@ -88,6 +123,8 @@ const ProjectPage = ({ params }) => {
                         className="bg-[#f5f5f5] w-[354px] rounded-2xl py-3 px-6"
                       >
                         <ProjectBoard
+                          setIsFeatureAdded={setIsFeatureAdded}
+                          isFeatureAdded={isFeatureAdded}
                           boardHeading={project.status}
                           boardId={project.id}
                           numFeatures={project.feature.length}
@@ -107,8 +144,6 @@ const ProjectPage = ({ params }) => {
           )}
         </Droppable>
       </DragDropContext>
-
-      <button onClick={toggleForm}>Create</button>
     </div>
   );
 };

@@ -5,10 +5,15 @@ import { GrFormClose } from "react-icons/gr";
 import slugify from "slugify";
 import axios from "axios";
 
-const AddBoardForm = ({ isVisible, toggleForm, project }) => {
+const AddBoardForm = ({
+  isVisible,
+  toggleForm,
+  project,
+  setIsCreated,
+  isCreated,
+}) => {
   // State variables to manage form inputs and submission status
   const [status, setStatus] = useState("");
-  const [isCreated, setIsCreated] = useState(false);
 
   // Function to handle form submission
   const handleBoardSubmit = async (e) => {

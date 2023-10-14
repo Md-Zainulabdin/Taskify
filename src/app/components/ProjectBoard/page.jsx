@@ -8,7 +8,8 @@ const ProjectBoard = ({
   boardId,
   numFeatures,
   setSelectedBoardId,
-  toggleAddFeature,
+  setIsFeatureAdded,
+  isFeatureAdded
 }) => {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -16,11 +17,16 @@ const ProjectBoard = ({
     setIsVisible(!isVisible);
   };
 
-  // console.log(isVisible);
   return (
     <>
       <Modal isVisible={isVisible} />
-      <AddFeatureForm isVisible={isVisible} toggleForm={toggleForm} boardId={boardId} />
+      <AddFeatureForm
+        setIsFeatureAdded={setIsFeatureAdded}
+        isFeatureAdded={isFeatureAdded}
+        isVisible={isVisible}
+        toggleForm={toggleForm}
+        boardId={boardId}
+      />
       <div className="flex flex-row justify-between items-center pb-6 border-b-2 border-b-[#30e575]">
         <div className="flex items-center">
           <div className="w-2 h-2 bg-[#30e575] rounded-full mr-2" />

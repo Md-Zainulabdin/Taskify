@@ -5,8 +5,10 @@ import useSearchFilter from "@/Store/searchFilter";
 import ProjectForm from "@/app/components/ProjectForm/page";
 import Modal from "@/app/components/Modal/page";
 import ProjectTable from "@/app/components/ProjectTable/page";
+import { useRouter } from "next/navigation";
 
 const ProjectBoard = () => {
+  const { back } = useRouter();
   // Initialize the searchStore state using the useSearchFilter hook
   const searchStore = useSearchFilter((state) => state);
 
@@ -15,6 +17,7 @@ const ProjectBoard = () => {
   const [search, setSearch] = useState("");
   const [isUpdated, setIsUpdated] = useState(false);
   const [updatedProjectId, setUpdatedProjectId] = useState("");
+  const [isCreated, setIsCreated] = useState(false);
 
   // Function to toggle the project form visibility
   const toggleProjectForm = () => setShowForm(!showForm);
@@ -39,7 +42,16 @@ const ProjectBoard = () => {
         setShowForm={setShowForm}
         updatedProjectId={updatedProjectId}
         setUpdatedProjectId={setUpdatedProjectId}
+        isCreated={isCreated}
+        setIsCreated={setIsCreated}
       />
+
+      <div className="navigation w-full pb-6 flex gap-2 items-center">
+        <span onClick={() => back()} className="text-[#333] cursor-pointer hover:text-[#555]">
+          ● Home {">"}
+        </span>
+        <span className="font-semibold">Project Board</span>
+      </div>
 
       {/* Search and Create buttons */}
       <div className="filter-search w-full flex items-center justify-between gap-3 md:gap-6">
@@ -76,6 +88,7 @@ const ProjectBoard = () => {
           setIsUpdated={setIsUpdated}
           setShowForm={setShowForm}
           setUpdatedProjectId={setUpdatedProjectId}
+          isCreated={isCreated}
         />
       </div>
     </div>

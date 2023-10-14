@@ -2,9 +2,9 @@ import Hero from "./components/Hero/page";
 
 export default function Home() {
   return (
-    <div className='w-full lg:h-[80vh] flex justify-center items-center relative'>
+    <div className='w-full flex justify-center items-center relative'>
 
-      <div className="icon hidden lg:block absolute top-32 right-24 xl:right-36">
+      <div className="icon hidden lg:block absolute top-12 right-24">
         <img
           src="arrow.svg"
           alt="icon"
@@ -12,7 +12,7 @@ export default function Home() {
         />
       </div>
       {/* Hero Section */}
-      <section className="w-full flex justify-center items-center">
+      <section className="w-full flex flex-col gap-6 md:gap-12 justify-center items-center">
         <Hero />
       </section>
 

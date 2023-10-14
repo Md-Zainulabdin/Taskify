@@ -12,11 +12,12 @@ const ProjectForm = ({
   isUpdated,
   setIsUpdated,
   updatedProjectId,
+  isCreated,
+  setIsCreated
 }) => {
   // State variables to manage form inputs and submission status
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
-  const [isCreated, setIsCreated] = useState(false);
   const router = useRouter();
 
   const createProjectHandler = async (slug) => {

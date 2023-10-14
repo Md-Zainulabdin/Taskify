@@ -4,7 +4,13 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { GrFormClose } from "react-icons/gr";
 
-const AddFeatureForm = ({ isVisible, toggleForm, boardId }) => {
+const AddFeatureForm = ({
+  isVisible,
+  toggleForm,
+  boardId,
+  setIsFeatureAdded,
+  isFeatureAdded,
+}) => {
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
   const [finishDate, setFinishDate] = useState("");
@@ -33,6 +39,7 @@ const AddFeatureForm = ({ isVisible, toggleForm, boardId }) => {
       setFinishDate("");
       setIsCreated(false);
       toggleForm();
+      setIsFeatureAdded(!isFeatureAdded);
     }
   };
 

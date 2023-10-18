@@ -197,7 +197,7 @@ const ProjectPage = ({ params }) => {
                           setSelectedBoardId={setSelectedBoardId}
                         />
 
-                        <Droppable droppableId={ProjectBoard.id} type="feature">
+                        <Droppable droppableId={project.id} type="feature">
                           {(provided) => (
                             <div
                               ref={provided.innerRef}

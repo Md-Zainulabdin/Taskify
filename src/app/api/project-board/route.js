@@ -80,7 +80,80 @@ export const PATCH = async (req, res) => {
                 status: 200,
                 statusText: "successfull"
             })
-        };
+        }
+
+        if (type === 'feature') {
+            const project = await prisma.project.findUnique({
+                where: {
+                    id: projectId
+                },
+                include: {
+                    projectBoards: {
+                        include: {
+                            feature: true
+                        }
+                    }
+                }
+            });
+
+            if (!project) return new NextResponse("project not found", { status: 500 });
+
+            const sourceBoard = project.projectBoards.find(board => board.id === sourceBoardId);
+            const destinationBoard = project.projectBoards.find(board => board.id === destinationBoardId);
+
+            if (!sourceBoard || !destinationBoard) return new NextResponse("Error updating", { status: 500 });
+
+            const movedFeature = sourceBoard.feature[sourceIndex];
+
+            if (sourceBoardId === destinationBoardId) {
+                const sourceFeatures = [...sourceBoard.feature];
+                const movedFeature = sourceFeatures.splice(sourceIndex, 1)[0];
+
+                const destinationOrder = sourceFeatures[destinationIndex].order || destinationIndex + 1;
+
+                movedFeature.order = destinationOrder;
+
+                sourceFeatures.forEach((feature, index) => {
+                    if (index >= Math.min(sourceIndex, destinationIndex) && index <= Math.max(sourceIndex, destinationIndex)) {
+                        feature.order = index + 1;
+                    }
+                });
+
+                await prisma.projectBoard.update({
+                    where: {
+                        id: sourceBoardId
+                    },
+                    data: {
+                        order: destinationOrder
+                    }
+                })
+
+                await prisma.feature.update({
+                    where: { id: movedFeature.id },
+                    data: { order: destinationOrder }
+                })
+            } else {
+                destinationBoard.feature.splice(destinationIndex, 0, movedFeature);
+
+                await prisma.projectBoard.update({
+                    where: { id: destinationBoardId },
+                    data: { feature: { set: destinationBoard.feature } }
+                })
+
+                sourceBoard.feature.splice(sourceIndex, 1);
+                await prisma.projectBoard.update({
+                    where: { id: sourceBoardId },
+                    data: { feature: { set: sourceBoard.feature } }
+                })
+
+                return NextResponse.json("update successfull", {
+                    status: 200,
+                    statusText: "successfull"
+                })
+            }
+
+        }
+
     } catch (error) {
         console.log("error", error);
         return new NextResponse("Error Updating", { status: 400 });

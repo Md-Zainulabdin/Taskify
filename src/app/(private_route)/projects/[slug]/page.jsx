@@ -80,7 +80,7 @@ const ProjectPage = ({ params }) => {
             (board) => board.id === destinationBoardId
           );
 
-          if (!destinationBoard) return;
+          // if (!destinationBoard) return;
 
           destinationBoard.features.splice(destination.index, 0, moveFeature);
           return board;
@@ -97,6 +97,21 @@ const ProjectPage = ({ params }) => {
       };
 
       setProject(updatedProject);
+
+      try {
+        const { statusText } = await axios.patch("/api/project-board", {
+          type: "feature",
+          projectId: project.id,
+          sourceIndex,
+          destinationIndex: destination.index,
+          sourceBoardId,
+          destinationBoardId,
+        });
+
+        toast.success(statusText);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 

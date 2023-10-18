@@ -68,6 +68,35 @@ const ProjectPage = ({ params }) => {
         });
         toast.error("Updated not Successfull");
       }
+    } else if (type === "feature") {
+      const { index: sourceIndex, draggableId: sourceBoardId } = source;
+      const destinationBoardId = destination.droppableId;
+
+      const updatedProjectBoard = project.projectBoards.map((board) => {
+        if ((board.id = sourceBoardId)) {
+          const moveFeature = board.features.splice(sourceIndex, 1)[0];
+
+          const destinationBoard = project.projectBoards.find(
+            (board) => board.id === destinationBoardId
+          );
+
+          if (!destinationBoard) return;
+
+          destinationBoard.features.splice(destination.index, 0, moveFeature);
+          return board;
+        } else if (board.id === destinationBoardId) {
+          return board;
+        } else {
+          return board;
+        }
+      });
+
+      const updatedProject = {
+        ...project,
+        projectBoards: updatedProjectBoard,
+      };
+
+      setProject(updatedProject);
     }
   };
 
@@ -118,7 +147,11 @@ const ProjectPage = ({ params }) => {
       </div>
 
       <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="board-items" direction="horizontal" type="status">
+        <Droppable
+          droppableId="board-items"
+          direction="horizontal"
+          type="status"
+        >
           {(provided) => (
             <div
               {...provided.droppableProps}
@@ -149,11 +182,33 @@ const ProjectPage = ({ params }) => {
                           setSelectedBoardId={setSelectedBoardId}
                         />
 
-                        <div>
-                          {project.feature.map((elm) => (
-                            <FeatureCard key={elm.id} features={elm} />
-                          ))}
-                        </div>
+                        <Droppable droppableId={ProjectBoard.id} type="feature">
+                          {(provided) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.droppableProps}
+                            >
+                              {project.feature.map((elm, index) => (
+                                <Draggable
+                                  key={elm.id}
+                                  draggableId={elm.id}
+                                  index={index}
+                                >
+                                  {(provided) => (
+                                    <div
+                                      ref={provided.innerRef}
+                                      {...provided.dragHandleProps}
+                                      {...provided.dragHandleProps}
+                                    >
+                                      <FeatureCard features={elm} />
+                                    </div>
+                                  )}
+                                </Draggable>
+                              ))}
+                              {provided.placeholder}
+                            </div>
+                          )}
+                        </Droppable>
                       </div>
                     )}
                   </Draggable>

@@ -8,6 +8,7 @@ import FeatureCard from "@/app/components/FeatureCard/page";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useRouter } from "next/navigation";
 import { PacmanLoader } from "react-spinners";
+import toast from "react-hot-toast";
 
 const ProjectPage = ({ params }) => {
   const [project, setProject] = useState(null);
@@ -32,7 +33,7 @@ const ProjectPage = ({ params }) => {
 
   // console.log(project);
 
-  const onDragEnd = (result) => {
+  const onDragEnd = async (result) => {
     const { source, destination, type } = result;
 
     if (!destination) return;
@@ -50,6 +51,23 @@ const ProjectPage = ({ params }) => {
           order: index + 1,
         })),
       });
+
+      try {
+        const { statusText } = await axios.patch("/api/project-board", {
+          projectId: project.id,
+          sourceIndex: source.index,
+          destinationIndex: destination.index,
+          type,
+        });
+        toast.success(statusText);
+      } catch (error) {
+        console.log(error);
+        setProject({
+          ...project,
+          ProjectBoard: project.projectBoard,
+        });
+        toast.error("Updated not Successfull");
+      }
     }
   };
 
@@ -100,7 +118,7 @@ const ProjectPage = ({ params }) => {
       </div>
 
       <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="board-6" direction="horizontal" type="status">
+        <Droppable droppableId="board-items" direction="horizontal" type="status">
           {(provided) => (
             <div
               {...provided.droppableProps}

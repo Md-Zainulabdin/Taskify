@@ -19,6 +19,7 @@ const ProjectTable = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
+        if (!filterProject) return;
         const res = await axios.get("/api/projects");
         setProjects(res.data);
 
@@ -64,64 +65,60 @@ const ProjectTable = ({
     }
   };
 
-  if (projects.length === 0)
-    return (
-      <div className="w-full h-[60vh] flex justify-center items-center">
-        <PacmanLoader color="#333" />
-      </div>
-    );
+  // if (filterProject.length === 0)
+  //   return (
+  //     <div className="w-full h-[60vh] flex justify-center items-center">
+  //       <PacmanLoader color="#333" />
+  //     </div>
+  //   );
+
+  console.log("filter project", projects);
 
   return (
     <div className="w-full flex flex-wrap justify-center md:justify-start items-center md:items-start gap-6 py-8">
-      {filterProject.length === 0 ? (
-        <div className="w-full h-[400px] border border-dashed flex justify-center items-center rounded-md">
-          <h1 className="text-2xl text-red-500">Not Found!</h1>
-        </div>
-      ) : (
-        filterProject.map((project) => (
+      {filterProject.map((project) => (
+        <div
+          key={project.id}
+          className="w-full md:w-[350px] relative px-4 py-3 border flex flex-col gap-2 rounded-md shadow-sm hover:border-[#ccc] hover:shadow-md transition cursor-pointer"
+        >
           <div
-            key={project.id}
-            className="w-full md:w-[350px] relative px-4 py-3 border flex flex-col gap-2 rounded-md shadow-sm hover:border-[#ccc] hover:shadow-md transition cursor-pointer"
+            className="edit absolute top-3 right-3 border-2 p-1 rounded-full transtion hover:border-indigo-400"
+            onClick={() => {
+              setIsUpdated(true);
+              setShowForm(true);
+              setUpdatedProjectId(project.id);
+            }}
           >
-            <div
-              className="edit absolute top-3 right-3 border-2 p-1 rounded-full transtion hover:border-indigo-400"
-              onClick={() => {
-                setIsUpdated(true);
-                setShowForm(true);
-                setUpdatedProjectId(project.id);
-              }}
-            >
-              <GrFormEdit className="text-[#999] text-2xl" />
-            </div>
-
-            <div className="name">
-              <Link
-                href={`/projects/${project.slug}`}
-                className="font-semibold text-xl hover:underline"
-              >
-                {project.name}
-              </Link>
-            </div>
-
-            <div className="desc">
-              <p className="text-[#999]">{project.description}</p>
-            </div>
-
-            <div className="date-time flex justify-between items-center mt-3">
-              <span className="text-xs text-purple-800 bg-purple-200 px-[8px] py-[3px] rounded-[4px]">
-                {project.createdAt.slice(0, 10).split("-").reverse().join("-")}
-              </span>
-
-              <button
-                onClick={() => onDeleteHandler(project.id)}
-                className="text-sm bg-red-200 text-red-800 px-[8px] py-[3px] rounded-[4px]"
-              >
-                Delete
-              </button>
-            </div>
+            <GrFormEdit className="text-[#999] text-2xl" />
           </div>
-        ))
-      )}
+
+          <div className="name">
+            <Link
+              href={`/projects/${project.slug}`}
+              className="font-semibold text-xl hover:underline"
+            >
+              {project.name}
+            </Link>
+          </div>
+
+          <div className="desc">
+            <p className="text-[#999]">{project.description}</p>
+          </div>
+
+          <div className="date-time flex justify-between items-center mt-3">
+            <span className="text-xs text-purple-800 bg-purple-200 px-[8px] py-[3px] rounded-[4px]">
+              {project.createdAt.slice(0, 10).split("-").reverse().join("-")}
+            </span>
+
+            <button
+              onClick={() => onDeleteHandler(project.id)}
+              className="text-sm bg-red-200 text-red-800 px-[8px] py-[3px] rounded-[4px]"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };

@@ -159,3 +159,22 @@ export const PATCH = async (req, res) => {
         return new NextResponse("Error Updating", { status: 400 });
     }
 }
+
+export const DELETE = async (req, res) => {
+    const body = await req.json();
+    const projectId = body.projectId; // Get the project ID from the request body
+
+    try {
+        // Delete the project using Prisma
+        const deleteProject = await prisma.project.delete({
+            where: {
+                id: projectId
+            }
+        });
+
+        return NextResponse.json({ statusText: "Project Deleted", data: deleteProject });
+    } catch (error) {
+        console.error("Error:", error);
+        return NextResponse.json({ error: "Failed to Delete Project" });
+    }
+};

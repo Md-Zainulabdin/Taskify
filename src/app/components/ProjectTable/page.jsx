@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { GrFormEdit } from "react-icons/gr";
 import { PacmanLoader } from "react-spinners";
+import Swal from "sweetalert2";
 
 const ProjectTable = ({
   search,
@@ -50,29 +51,32 @@ const ProjectTable = ({
     );
     setFilterProject(filteredProjects);
   };
-
   const onDeleteHandler = async (projectId) => {
-    console.log(projectId);
-    try {
-      const { statusText } = await axios.delete("/api/projects", {
-        data: projectId,
-      });
-
-      toast.success(statusText);
-    } catch (error) {
-      console.log(error);
-      toast.error(error.response.data);
-    }
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#222",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axios.delete("/api/project-board", {
+            data: { projectId },
+          });
+    
+          // Handle the response as needed, e.g., show a success message
+          toast.success(response.data.statusText);
+        } catch (error) {
+          console.error(error);
+          toast.error(error.response.data.error);
+        }
+      }
+    });
   };
 
-  // if (filterProject.length === 0)
-  //   return (
-  //     <div className="w-full h-[60vh] flex justify-center items-center">
-  //       <PacmanLoader color="#333" />
-  //     </div>
-  //   );
-
-  console.log("filter project", projects);
 
   return (
     <div className="w-full flex flex-wrap justify-center md:justify-start items-center md:items-start gap-6 py-8">
